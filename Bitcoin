@@ -1,0 +1,32 @@
+package main
+
+import (
+  "fmt"
+  "strings"
+  "net/http"
+  "io/ioutil"
+)
+
+func main() {
+
+  url := "https://shapeshift.io/shift"
+  method := "POST"
+
+  payload := strings.NewReader("{\n    \"withdrawal\": \"0x5041F19dC1659E33848cc0f77cbF7447de562917\",\n    \"returnAddress\": \"1N17uHdvY6fNwtutM1G5EAZFPLC43B59rB\",\n    \"pair\": \"BTC_ETH\"\n}")
+
+  client := &http.Client {
+  }
+  req, err := http.NewRequest(method, url, payload)
+
+  if err != nil {
+    fmt.Println(err)
+  }
+  req.Header.Add("Content-Type", "application/json")
+  req.Header.Add("Authorization", "Bearer {userToken}")
+
+  res, err := client.Do(req)
+  defer res.Body.Close()
+  body, err := ioutil.ReadAll(res.Body)
+
+  fmt.Println(string(body))
+}
